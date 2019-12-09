@@ -32,6 +32,14 @@ class Fib extends Component {
     this.setState({ index: ''});
   }
 
+  handleClear = async (event) => {
+    event.preventDefault();
+
+    await axios.delete('/api/values');
+    await this.fetchIndexes();
+    await this.fetchValues();
+  }
+
   renderSeenIndexes() {
     return this.state.seenIndexes.map(({ number }) => number).join(', ');
   }
@@ -64,7 +72,10 @@ class Fib extends Component {
         <h3>Indexes I have seen:</h3>
         { this.renderSeenIndexes() }
         <h3>Calculated Values:</h3>
-        { this. renderValues() }
+        { this.renderValues() }
+        <div>
+          <button onClick={this.handleClear}>Clear values</button>
+        </div>
       </div>
     );
   }

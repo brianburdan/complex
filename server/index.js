@@ -60,6 +60,13 @@ app.post('/values', async (req, res) => {
   res.send({ working: true });
 });
 
+app.delete('/values', async (req, res) => {
+  redisClient.del('values');
+  pgClient.query('DELETE FROM values');
+  console.log('deleted');
+  res.send({ deleted: true });
+});
+
 app.listen(5000, err => {
   console.log('Listening');
 });
