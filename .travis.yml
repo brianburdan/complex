@@ -1,0 +1,19 @@
+services:
+  - docker
+
+before_install:
+  - docker build -t brianburdan/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true brianburdan/react-test npm test
+
+after_success:
+  - docker build -t brianburdan/complex-client ./client
+  - docker build -t brianburdan/complex-nginx ./nginx
+  - docker build -t brianburdan/complex-server ./server
+  - docker build -t brianburdan/complex-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push brianburdan/complex-client
+  - docker push brianburdan/complex-nginx
+  - docker push brianburdan/complex-server
+  - docker push brianburdan/complex-worker
